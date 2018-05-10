@@ -1,4 +1,5 @@
 import * as React from "react";
+import { topic } from "./countdown";
 
 export interface CountdownObject {
   bezeichnung: string;
@@ -11,7 +12,9 @@ export interface topicItem {
   color: string;
 }
 
-interface CountdownObjectProps extends CountdownObject {}
+interface CountdownObjectProps extends CountdownObject {
+  countDoneUp: (e: topic) => any;
+}
 
 interface CountdownObjectState {
   distanceTime: string;
@@ -59,7 +62,7 @@ export class CountdownItem extends React.Component<CountdownObjectProps, Countdo
     return (
       <div
         className={
-          "w-full flex justify-center items-center flex-col h-24 border-b-2 border-" +
+          "w-full flex justify-center items-center flex-col min-h-24 h-24 border-b-2 border-" +
           this.props.topic.color +
           " bg-" +
           this.props.topic.color +

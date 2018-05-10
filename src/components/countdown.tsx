@@ -3,13 +3,14 @@ import { CountdownObject, CountdownItem, topicItem } from "./CountdownObject";
 import { Head } from "./Head";
 import { Subinfo, subinfoObject } from "./subinfo";
 import { SideBar } from "./sidebar";
-import { getCountdownlist, getTopicList } from "./controller";
+import { getCountdownlist, getTopicList, possibleTopics, getTopicListDumb } from "./controller";
 
 interface countDownProps {}
 
 export interface topic {
   bezeichnung: string;
   color: string;
+  done: number;
   countdownList: CountdownObject[];
 }
 
@@ -17,6 +18,7 @@ interface countDownState {
   countDownsDone: number;
   countDownsDue: number;
   topicList: topic[];
+  sideBarTopicList: topicItem[];
   headVisible: boolean;
   subinfoVisible: boolean;
   sidebarVisible: boolean;
@@ -31,6 +33,7 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
       countDownsDone: 0,
       countDownsDue: 0,
       topicList: getTopicList(),
+      sideBarTopicList: getTopicListDumb(),
       headVisible: true,
       subinfoVisible: true,
       sidebarVisible: true,
@@ -46,6 +49,17 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
     console.log(this.state);
   }
 
+  private switchToView = (e: string) => {
+    this.setState(
+      {
+        topicList: getTopicList(e)
+      },
+      () => {
+        console.log(this.state);
+      }
+    );
+  };
+
   public render() {
     return (
       <div className="w-full h-full">
@@ -58,12 +72,25 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
               <Subinfo subInfoArray={[{ amountOfDone: 0, amountOfDue: 0, topic: "Test", color: "red" }]} />
             )}
             <div id="main" className="flex flex-1 h-full">
-              {this.state.sidebarVisible && <SideBar topicList={this.state.topicList} />}
-              <div id="countDowns" className="w-3/4 h-full flex-col flex">
+              {this.state.sidebarVisible && (
+                <SideBar switchToView={e => this.switchToView(e)} topicList={this.state.sideBarTopicList} />
+              )}
+              <div id="countDowns" className="w-3/4 h-full overflow-auto">
                 {this.state.topicList &&
                   this.state.topicList.map((e: topic) =>
-                    e.countdownList.map((t: CountdownObject) => (
-                      <CountdownItem bezeichnung={t.bezeichnung} endDatum={t.endDatum} topic={e} key={t.bezeichnung} />
+                    e.countdownList.map((t: CountdownObject, index) => (
+                      <CountdownItem
+                        countDoneUp={() => {
+                          // ######
+                          // Done Count und Due Count
+                          // ######
+                          console.log("coundownitem");
+                        }}
+                        bezeichnung={t.bezeichnung}
+                        endDatum={t.endDatum}
+                        topic={e}
+                        key={index}
+                      />
                     ))
                   )}
               </div>
