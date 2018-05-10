@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: monospace;
+        }
+
+        .countdown {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding-bottom: 2%;
+        }
+
+        h3 {
+            font-size: calc((18 / 450) * 100vw);
+            margin: 0;
+            margin-top: calc((10 / 450) * 100vw);
+            margin-bottom: calc((10 / 450) * 100vw);
+        }
+
+        p {
+            text-align: center;
+            font-size: calc((35 / 450) * 100vw);
+            margin-top: 0px;
+            margin: 0;
+            margin-bottom: calc((10 / 450) * 100vw)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="countdown">
+        <h3>Feierabend</h3>
+        <p class="time" id="feibend"></p>
+        <h3>Kenntninsprüfung</h3>
+        <p class="time" id="kpruef"></p>
+        <h3>Projektarbeit</h3>
+        <p class="time" id="parb"></p>
+        <h3>Mündliche</h3>
+        <p class="time" id="muen"></p>
+    </div>
+    <script>
+        // Set the date we're counting down to
+        var currentDate = new Date();
+        var currentDateString = currentDate.getFullYear() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getDate();
+
+        var countDownDateKpruef = new Date("Apr 25, 2018 07:45:00").getTime();
+        var countDownDateParb = new Date("May 07, 2018 12:00:00").getTime();
+        var countDownDateMuend = new Date("June 14, 2018 10:00:00").getTime();
+        var countDownDateFeibend = new Date(currentDateString + " 17:50:00").getTime();
+        // Update the count down every 1 second
+        var x = setInterval(function () {
+
+            // Get todays date and time
+            var now_date = new Date();
+            var now = now_date.getTime();
+
+            // Find the distance between now an the count down date
+            var distanceKpruef = countDownDateKpruef - now;
+            var distanceParb = countDownDateParb - now;
+            var distanceMuend = countDownDateMuend - now;
+            var distanceFeibend = countDownDateFeibend - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var getDistance = function (distance) {
+                return time = {
+                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                    seconds: Math.floor((distance % (1000 * 60)) / 1000)
+                }
+            }
+
+            var kpruefTime = getDistance(distanceKpruef);
+            var parbTime = getDistance(distanceParb);
+            var muendTime = getDistance(distanceMuend);
+            var feibTime = getDistance(distanceFeibend);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("kpruef").innerHTML = kpruefTime.days + "d " + kpruefTime.hours + "h " +
+                kpruefTime.minutes + "m ";
+            document.getElementById("parb").innerHTML = parbTime.days + "d " + parbTime.hours + "h " +
+                parbTime.minutes + "m ";
+            document.getElementById("muen").innerHTML = muendTime.days + "d " + muendTime.hours + "h " +
+                muendTime.minutes + "m ";
+            document.getElementById("feibend").innerHTML = feibTime.hours + "h " +
+                feibTime.minutes + "m ";
+
+            // If the count down is over, write some text 
+            if (distanceFeibend < 0) {
+
+                if (now_date.getMinutes() % 2 === 0) {
+                    document.getElementsByClassName("countdown")[0].style.background = "red";
+                    document.getElementById("feibend").innerHTML =
+                        '<span style="color:white">FEIERABEND</span>';
+                } else {
+                    document.getElementsByClassName("countdown")[0].style.background = "white";
+                    document.getElementById("feibend").innerHTML = '<span style="color:red">FEIERABEND</span>';
+                }
+
+            }
+            if (distanceKpruef < 0) {
+                document.getElementById("kpruef").innerHTML = '<span>DONE</span>';
+            }
+            if (distanceParb < 0) {
+
+                document.getElementById("parb").innerHTML = '<span>DONE</span>';
+
+
+            }
+            if (distanceMuend < 0) {
+
+                document.getElementById("muen").innerHTML = '<span>DONE</span>';
+
+
+            }
+
+
+        }, 1000);
+    </script>
+
+</body>
+
+</html>
