@@ -11,7 +11,7 @@ interface HeadState {}
 
 export const Head = (props: HeadProps) => {
   return (
-    <div id="head" className="w-full h-16 border-b-2 border-black flex items-center justify-center">
+    <div id="head" className="w-full h-16 border-b flex items-center justify-center">
       <span id="done" className="text-2xl px-3">
         Done: {props.done}
       </span>
