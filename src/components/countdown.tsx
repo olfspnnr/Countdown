@@ -52,10 +52,25 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
   private switchToView = (e: string) => {
     this.setState(
       {
-        topicList: getTopicList(e)
+        topicList: []
       },
       () => {
-        console.log(this.state);
+        this.setState({
+          topicList: getTopicList(e)
+        });
+      }
+    );
+  };
+
+  private switchToDefaultView = () => {
+    this.setState(
+      {
+        topicList: []
+      },
+      () => {
+        this.setState({
+          topicList: getTopicList()
+        });
       }
     );
   };
@@ -73,7 +88,11 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
             )}
             <div id="main" className="flex flex-1 h-full">
               {this.state.sidebarVisible && (
-                <SideBar switchToView={e => this.switchToView(e)} topicList={this.state.sideBarTopicList} />
+                <SideBar
+                  switchToDefaultView={() => this.switchToDefaultView()}
+                  switchToView={e => this.switchToView(e)}
+                  topicList={this.state.sideBarTopicList}
+                />
               )}
               <div id="countDowns" className="w-3/4 h-full overflow-auto">
                 {this.state.topicList &&

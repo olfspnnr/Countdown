@@ -32,21 +32,28 @@ export class CountdownItem extends React.Component<CountdownObjectProps, Countdo
   componentWillMount() {}
 
   componentDidMount() {
-    const countdownDate = this.props.endDatum.getTime();
-    const logic = setInterval(() => {
-      const currentDate = new Date().getTime();
-      const distance = countdownDate - currentDate;
-      const countdownTime = this.getDistance(distance);
-      if (distance > 0)
-        this.setState({
-          distanceTime: countdownTime.days + "d " + countdownTime.hours + "h " + countdownTime.minutes + "m "
-        });
-      else
-        this.setState({
-          distanceTime: "DONE",
-          done: true
-        });
-    }, 1000);
+    this.setState(
+      {
+        distanceTime: "Refreshing..."
+      },
+      () => {
+        const countdownDate = this.props.endDatum.getTime();
+        const logic = setInterval(() => {
+          const currentDate = new Date().getTime();
+          const distance = countdownDate - currentDate;
+          const countdownTime = this.getDistance(distance);
+          if (distance > 0)
+            this.setState({
+              distanceTime: countdownTime.days + "d " + countdownTime.hours + "h " + countdownTime.minutes + "m "
+            });
+          else
+            this.setState({
+              distanceTime: "DONE",
+              done: true
+            });
+        }, 500);
+      }
+    );
   }
 
   private getDistance = (distance: number) => {
@@ -62,7 +69,7 @@ export class CountdownItem extends React.Component<CountdownObjectProps, Countdo
     return (
       <div
         className={
-          "w-full flex justify-center items-center flex-col min-h-24 h-24 border-b-2 border-" +
+          "w-full flex justify-center items-center flex-col min-h-24 h-24 border-b border-" +
           this.props.topic.color +
           " bg-" +
           this.props.topic.color +

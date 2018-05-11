@@ -8,6 +8,7 @@ export interface sideBarItemProps extends topicItem {
 
 interface sideBarProps {
   switchToView: (topic: string) => any;
+  switchToDefaultView: () => any;
   topicList: topicItem[];
 }
 
@@ -36,13 +37,21 @@ export const SideBarItem = (props: sideBarItemProps) => {
 
 export const SideBar = (props: sideBarProps) => {
   return (
-    <div id="sideBar" className="w-1/4 flex flex-col items-center border-r">
-      {props.topicList.map(e => (
+    <div id="sideBar" className="w-1/4 flex flex-col items-center">
+      <SideBarItem
+        switchToView={() => {
+          props.switchToDefaultView();
+        }}
+        bezeichnung={"Alle"}
+        color={"grey"}
+        key={"Default"}
+      />
+      {props.topicList.map((e, index) => (
         <SideBarItem
           switchToView={e => props.switchToView(e)}
           bezeichnung={e.bezeichnung}
           color={e.color}
-          key={e.bezeichnung}
+          key={index}
         />
       ))}
     </div>
