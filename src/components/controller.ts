@@ -68,7 +68,6 @@ export const getCountdownlist = (para?: topicItem) => {
 
 export const getTopicList = (selectedTopic?: string) => {
   let topicArray = [] as topic[];
-
   if (!selectedTopic)
     for (const bezeichnung in possibleTopics) {
       let countdownListForBezeichnung = getCountdownlist(possibleTopics[bezeichnung]);

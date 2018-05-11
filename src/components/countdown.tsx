@@ -17,13 +17,15 @@ export interface topic {
 interface countDownState {
   countDownsDone: number;
   countDownsDue: number;
-  topicList: topic[];
+  visibleTopicList: topic[];
+  invisibleTopicList: topic[];
   sideBarTopicList: topicItem[];
   headVisible: boolean;
   subinfoVisible: boolean;
   sidebarVisible: boolean;
   loading: boolean;
   currentDate: Date;
+  subinfoArray: subinfoObject[];
 }
 
 export class Countdown extends React.Component<countDownProps, countDownState> {
@@ -32,31 +34,32 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
     this.state = {
       countDownsDone: 0,
       countDownsDue: 0,
-      topicList: getTopicList(),
+      visibleTopicList: getTopicList(),
+      invisibleTopicList: getTopicList(),
       sideBarTopicList: getTopicListDumb(),
       headVisible: true,
       subinfoVisible: true,
       sidebarVisible: true,
       loading: true,
-      currentDate: new Date()
+      currentDate: new Date(),
+      subinfoArray: []
     };
   }
 
-  private getSubInfo = () => {};
   componentWillMount() {}
 
   componentDidMount() {
-    console.log(this.state);
+    this.resetDone();
   }
 
   private switchToView = (e: string) => {
     this.setState(
       {
-        topicList: []
+        visibleTopicList: []
       },
       () => {
         this.setState({
-          topicList: getTopicList(e)
+          visibleTopicList: getTopicList(e)
         });
       }
     );
@@ -65,12 +68,53 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
   private switchToDefaultView = () => {
     this.setState(
       {
-        topicList: []
+        visibleTopicList: []
       },
       () => {
         this.setState({
-          topicList: getTopicList()
+          visibleTopicList: getTopicList()
         });
+      }
+    );
+  };
+
+  private getSubInfoArray = () => {
+    let newSubInfoArray = [] as subinfoObject[];
+    const visibleTopicList = this.state.invisibleTopicList;
+    visibleTopicList.forEach((topic, index) => {
+      newSubInfoArray.push({
+        amountOfDone: visibleTopicList[index].done,
+        amountOfDue: visibleTopicList.length - visibleTopicList[index].done,
+        color: visibleTopicList[index].color,
+        topicBezeichnung: visibleTopicList[index].bezeichnung
+      });
+    });
+    this.setState({
+      subinfoArray: newSubInfoArray
+    });
+  };
+
+  public resetDone = () => {
+    let newTopicArray = this.state.visibleTopicList;
+    let newBackupTopicArray = this.state.invisibleTopicList;
+    newTopicArray.forEach(e => {
+      e.done = 0;
+    });
+  };
+
+  private countDoneUp = (topicToBeUpped: string) => {
+    let newBackupTopicArray = this.state.visibleTopicList;
+    newBackupTopicArray.forEach(e => {
+      if (e.bezeichnung == topicToBeUpped) {
+        e.done++;
+      }
+    });
+    this.setState(
+      {
+        invisibleTopicList: newBackupTopicArray
+      },
+      () => {
+        this.getSubInfoArray();
       }
     );
   };
@@ -83,9 +127,7 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
         ) : (
           <div className="h-full flex flex-col">
             {this.state.headVisible && <Head done={this.state.countDownsDone} due={this.state.countDownsDue} />}
-            {this.state.subinfoVisible && (
-              <Subinfo subInfoArray={[{ amountOfDone: 0, amountOfDue: 0, topic: "Test", color: "red" }]} />
-            )}
+            {this.state.subinfoVisible && <Subinfo subInfoArray={this.state.subinfoArray} />}
             <div id="main" className="flex flex-1 h-full">
               {this.state.sidebarVisible && (
                 <SideBar
@@ -95,15 +137,12 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
                 />
               )}
               <div id="countDowns" className="w-3/4 h-full overflow-auto">
-                {this.state.topicList &&
-                  this.state.topicList.map((e: topic) =>
+                {this.state.visibleTopicList &&
+                  this.state.visibleTopicList.map((e: topic) =>
                     e.countdownList.map((t: CountdownObject, index) => (
                       <CountdownItem
-                        countDoneUp={() => {
-                          // ######
-                          // Done Count und Due Count
-                          // ######
-                          console.log("coundownitem");
+                        countDoneUp={e => {
+                          this.countDoneUp(e);
                         }}
                         bezeichnung={t.bezeichnung}
                         endDatum={t.endDatum}

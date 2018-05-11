@@ -13,7 +13,7 @@ export interface topicItem {
 }
 
 interface CountdownObjectProps extends CountdownObject {
-  countDoneUp: (e: topic) => any;
+  countDoneUp: (e: string) => any;
 }
 
 interface CountdownObjectState {
@@ -37,24 +37,38 @@ export class CountdownItem extends React.Component<CountdownObjectProps, Countdo
         distanceTime: "Refreshing..."
       },
       () => {
-        const countdownDate = this.props.endDatum.getTime();
-        const logic = setInterval(() => {
-          const currentDate = new Date().getTime();
-          const distance = countdownDate - currentDate;
-          const countdownTime = this.getDistance(distance);
-          if (distance > 0)
-            this.setState({
-              distanceTime: countdownTime.days + "d " + countdownTime.hours + "h " + countdownTime.minutes + "m "
-            });
-          else
-            this.setState({
-              distanceTime: "DONE",
-              done: true
-            });
-        }, 500);
+        this.countDownLogic();
       }
     );
   }
+
+  private countDownLogic = () => {
+    const countdownDate = this.props.endDatum.getTime();
+    if (!this.state.done) {
+      const logic = setInterval(() => {
+        const currentDate = new Date().getTime();
+        const distance = countdownDate - currentDate;
+        const countdownTime = this.getDistance(distance);
+        if (distance > 0)
+          this.setState({
+            distanceTime: countdownTime.days + "d " + countdownTime.hours + "h " + countdownTime.minutes + "m "
+          });
+        else
+          this.setState(
+            {
+              distanceTime: "DONE",
+              done: true
+            },
+            () => {
+              this.countDownLogic();
+              clearInterval(logic);
+            }
+          );
+      }, 500);
+    } else {
+      this.props.countDoneUp(this.props.topic.bezeichnung);
+    }
+  };
 
   private getDistance = (distance: number) => {
     return {

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export interface subinfoObject {
-  topic: string;
+  topicBezeichnung: string;
   amountOfDone: number;
   amountOfDue: number;
   color: string;
@@ -14,10 +14,10 @@ interface subinfoProps {
 const SubinfoObject = (props: subinfoObject) => (
   <div
     id="subinfoObject"
-    className={"h-6 flex flex-1 items-center justify-center text-sm text-white bg-" + props.color + "-light"}
+    className={"h-6 flex flex-1 items-center justify-center text-xs bg-" + props.color + "-light"}
   >
     <span id="topic" className="px-2">
-      {props.topic}
+      {props.topicBezeichnung}
     </span>
     <span id="topicDone" className="px-2">
       {props.amountOfDone}
@@ -36,8 +36,8 @@ export const Subinfo = (props: subinfoProps) => {
         <SubinfoObject
           amountOfDone={e.amountOfDone}
           amountOfDue={e.amountOfDue}
-          topic={e.topic}
-          key={e.topic}
+          topicBezeichnung={e.topicBezeichnung}
+          key={e.topicBezeichnung}
           color={e.color}
         />
       ))}
