@@ -4,18 +4,26 @@ import { topicItem } from "./CountdownObject";
 
 export interface sideBarItemProps extends topicItem {
   switchToView: (topic: string) => any;
+  addNewTopic?: (pb: string, pc: string) => any;
 }
 
 interface sideBarProps {
   switchToView: (topic: string) => any;
   switchToDefaultView: () => any;
   topicList: topicItem[];
+  addNewTopic?: (pb: string, pc: string) => any;
 }
 
 export const SideBarItem = (props: sideBarItemProps) => {
   return (
     <div
       onClick={e => {
+        if (props.addNewTopic) {
+          console.log("test");
+          props.addNewTopic("test", "red");
+          props.switchToView("Alle");
+          return;
+        }
         props.switchToView(props.bezeichnung);
       }}
       className={
@@ -54,6 +62,15 @@ export const SideBar = (props: sideBarProps) => {
           key={index}
         />
       ))}
+      <SideBarItem
+        switchToView={() => {
+          props.switchToDefaultView();
+        }}
+        bezeichnung={"+"}
+        color={"grey"}
+        key={"add"}
+        addNewTopic={() => props.addNewTopic("test", "red")}
+      />
     </div>
   );
 };

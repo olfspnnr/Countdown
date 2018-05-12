@@ -32,12 +32,12 @@ const SubinfoObject = (props: subinfoObject) => (
 export const Subinfo = (props: subinfoProps) => {
   return (
     <div id="subInfo" className="w-full min-w-2 flex flex-wrap flex-row items-stretch justify-center">
-      {props.subInfoArray.map((e: subinfoObject) => (
+      {props.subInfoArray.map((e: subinfoObject, index) => (
         <SubinfoObject
           amountOfDone={e.amountOfDone}
           amountOfDue={e.amountOfDue}
           topicBezeichnung={e.topicBezeichnung}
-          key={e.topicBezeichnung}
+          key={index}
           color={e.color}
         />
       ))}

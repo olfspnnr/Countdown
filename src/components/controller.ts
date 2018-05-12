@@ -4,19 +4,24 @@ import { topic } from "./countdown";
 const currentDate = new Date();
 const currentDateString = currentDate.getFullYear() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getDate();
 
+export interface possibleTopic {
+  bezeichnung: string;
+  color: string;
+}
+
 export const possibleTopics = {
   Arbeit: {
     bezeichnung: "Arbeit",
     color: "red"
-  },
+  } as possibleTopic,
   Prüfung: {
     bezeichnung: "Prüfung",
     color: "blue"
-  },
+  } as possibleTopic,
   Zuhause: {
     bezeichnung: "Zuhause",
     color: "green"
-  }
+  } as possibleTopic
 } as any;
 
 let countdownlist = [
