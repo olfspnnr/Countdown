@@ -83,7 +83,7 @@ export class CountdownItem extends React.Component<CountdownObjectProps, Countdo
     return (
       <div
         className={
-          "w-full flex justify-center items-center flex-col min-h-24 h-24 border-b border-" +
+          "w-full flex justify-center items-center flex-col p-2 min-h-18 h-18 border-b border-" +
           this.props.topic.color +
           " bg-" +
           this.props.topic.color +
