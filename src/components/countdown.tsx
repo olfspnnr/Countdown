@@ -3,7 +3,16 @@ import { CountdownObject, CountdownItem, topicItem } from "./CountdownObject";
 import { Head } from "./Head";
 import { Subinfo, subinfoObject } from "./subinfo";
 import { SideBar } from "./sidebar";
-import { getCountdownlist, getTopicList, possibleTopics, getTopicListDumb, possibleTopic } from "./controller";
+import {
+  getCountdownlist,
+  getTopicList,
+  possibleTopics,
+  getTopicListDumb,
+  possibleTopic,
+  saveDataToLocalstorage,
+  getDataFromLocalstorage
+} from "./controller";
+import { modalOptions, Modal, modalForm, modalProps } from "./Modal";
 
 interface countDownProps {}
 
@@ -26,6 +35,7 @@ interface countDownState {
   loading: boolean;
   currentDate: Date;
   subinfoArray: subinfoObject[];
+  activeModals: modalProps[];
 }
 
 const newTopicDialog = () => {
@@ -60,13 +70,16 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
       sidebarVisible: true,
       loading: true,
       currentDate: new Date(),
-      subinfoArray: []
+      subinfoArray: [],
+      activeModals: []
     };
   }
 
   componentWillMount() {}
 
   componentDidMount() {}
+
+  componentWillUpdate() {}
 
   private addNewTopic = (pBezeichnung: string, pColor: string) => {
     let newTopic = {
@@ -220,6 +233,14 @@ export class Countdown extends React.Component<countDownProps, countDownState> {
           <div>Datenstruktur wird geladen...</div>
         ) : (
           <div className="h-full flex flex-col">
+            {this.state.activeModals.map((modal: modalProps) => (
+              <div className="h-full w-full absolute z-index-10 bg-grey opacity-75">
+                <Modal
+                  modalOption={{ forms: modal.modalOption.forms, headLine: modal.modalOption.headLine }}
+                  getValues={values => modal.getValues(values)}
+                />
+              </div>
+            ))}
             {this.state.headVisible && <Head done={this.state.countDownsDone} due={this.state.countDownsDue} />}
             {this.state.subinfoVisible && <Subinfo subInfoArray={this.state.subinfoArray} />}
             <div id="main" className="flex flex-1 h-full">

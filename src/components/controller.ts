@@ -4,12 +4,25 @@ import { topic } from "./countdown";
 const currentDate = new Date();
 const currentDateString = currentDate.getFullYear() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getDate();
 
+export const getDataFromLocalstorage = () => {
+  possibleTopics = JSON.parse(localStorage.getItem("topicsList"));
+  countdownlist = JSON.parse(localStorage.getItem("countDownList"));
+  console.log(countdownlist);
+};
+
+export const saveDataToLocalstorage = () => {
+  let possibleTopicJSON = JSON.stringify(possibleTopics);
+  let countdownJSON = JSON.stringify(countdownlist);
+  localStorage.setItem("topicsList", possibleTopicJSON);
+  localStorage.setItem("countDownList", countdownJSON);
+};
+
 export interface possibleTopic {
   bezeichnung: string;
   color: string;
 }
 
-export const possibleTopics = {
+export let possibleTopics = {
   Arbeit: {
     bezeichnung: "Arbeit",
     color: "red"
@@ -40,7 +53,6 @@ let countdownlist = [
     endDatum: new Date("Apr 25, 2018 07:45:00"),
     topic: possibleTopics.Prüfung
   },
-
   {
     bezeichnung: "Mündliche",
     endDatum: new Date("June 14, 2018 10:00:00"),
@@ -95,6 +107,7 @@ export const getTopicList = (selectedTopic?: string) => {
         });
       }
     }
+  saveDataToLocalstorage();
   return topicArray;
 };
 
